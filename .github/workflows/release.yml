@@ -74,10 +74,10 @@ jobs:
         with:
           name: cargo-dist-cache
           path: ~/.cargo/bin/dist
-      - name: "Checkout"
-        uses: "actions/checkout@v7"
+      - name: Checkout Core
+        uses: actions/checkout@v7
         with:
-          "path": "core"
+          "path": core
           "ref": "${{ github.ref_name }}"
           "repository": "secretpass/core"
           "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
@@ -143,12 +143,12 @@ jobs:
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           fi
-      - name: "Checkout"
-        uses: "actions/checkout@v7"
+      - name: Checkout Core
+        uses: actions/checkout@v7
         with:
-          "path": "core"
+          "path": core
           "ref": "${{ github.ref_name }}"
-          "repository": "secretpass/core"
+          "repository": secretpass/core
           "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
           set-safe-directory: '..'
 
@@ -172,7 +172,7 @@ jobs:
       - name: Attest
         uses: actions/attest@v4
         with:
-          subject-path: "target/distrib/*${{ join(matrix.targets, ', ') }}*"
+          subject-path: "cli/target/distrib/*${{ join(matrix.targets, ', ') }}*"
       - id: cargo-dist
         name: Post-build
         # We force bash here just because github makes it really hard to get values up
