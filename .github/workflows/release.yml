@@ -73,7 +73,7 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v7"
         with:
-          "path": "core"
+          "path": "../core"
           "ref": "${{ github.ref_name }}"
           "repository": "secretpass/core"
           "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
@@ -141,7 +141,7 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v7"
         with:
-          "path": "core"
+          "path": "../core"
           "ref": "${{ github.ref_name }}"
           "repository": "secretpass/core"
           "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
