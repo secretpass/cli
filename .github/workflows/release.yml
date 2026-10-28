@@ -131,9 +131,6 @@ jobs:
       run:
         working-directory: cli
     steps:
-      - name: enable windows longpaths
-        run: |
-          git config --global core.longpaths true
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
