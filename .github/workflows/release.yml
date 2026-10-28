@@ -64,12 +64,19 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.32.0/cargo-dist-installer.sh | sh"
+        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.33.1/cargo-dist-installer.sh | sh"
       - name: Cache dist
         uses: actions/upload-artifact@v7
         with:
           name: cargo-dist-cache
           path: ~/.cargo/bin/dist
+      - name: "Checkout"
+        uses: "actions/checkout@v7"
+        with:
+          "path": "core"
+          "ref": "${{ github.ref_name }}"
+          "repository": "secretpass/core"
+          "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
       # sure would be cool if github gave us proper conditionals...
       # so here's a doubly-nested ternary-via-truthiness to try to provide the best possible
       # functionality based on whether this is a pull_request, and whether it's from a fork.
@@ -112,6 +119,10 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/${{ join(matrix.targets, '-') }}-dist-manifest.json
+    permissions:
+      "attestations": "write"
+      "contents": "read"
+      "id-token": "write"
     steps:
       - name: enable windows longpaths
         run: |
@@ -128,7 +139,7 @@ jobs:
             echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           fi
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v7"
         with:
           "path": "core"
           "ref": "${{ github.ref_name }}"
@@ -151,6 +162,10 @@ jobs:
           # Actually do builds and make zips and whatnot
           dist build ${{ needs.plan.outputs.tag-flag }} --print=linkage --output-format=json ${{ matrix.dist_args }} > dist-manifest.json
           echo "dist ran successfully"
+      - name: Attest
+        uses: actions/attest@v4
+        with:
+          subject-path: "target/distrib/*${{ join(matrix.targets, ', ') }}*"
       - id: cargo-dist
         name: Post-build
         # We force bash here just because github makes it really hard to get values up

@@ -1,5 +1,5 @@
 - name: Checkout
-  uses: actions/checkout@v4
+  uses: actions/checkout@v7
   with:
     repository: secretpass/core
     token: ${{ secrets.CORE_ACCESS_TOKEN }}
