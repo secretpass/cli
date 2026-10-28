@@ -1,0 +1,7 @@
+- name: Checkout
+  uses: actions/checkout@v4
+  with:
+    repository: secretpass/core
+    token: ${{ secrets.CORE_ACCESS_TOKEN }}
+    path: core
+    ref: ${{ github.ref_name }}

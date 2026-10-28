@@ -1,0 +1,13 @@
+[build]
+rustflags = ["--cfg", "web_sys_unstable_apis"]
+
+[env]
+API_HOST = "localhost:20206"
+# Used for CORS
+UI_ORIGIN = "https://local.secretpass.cloud"
+CLOUD_PROXY_URL = "https://api.secretpass.cloud"
+
+CLOUD_RP_ID = "secretpass-cloud.localhost"
+CLOUD_RP_ORIGIN = "https://cloud.secretpass.cloud"
+LOCAL_RP_ID = "secretpass-local.localhost"
+LOCAL_RP_ORIGIN = "https://local.secretpass.local"
