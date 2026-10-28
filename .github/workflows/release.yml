@@ -50,7 +50,7 @@ jobs:
     runs-on: "ubuntu-22.04"
     defaults:
       run:
-        working-directory: ./cli
+        working-directory: cli
     outputs:
       val: ${{ steps.plan.outputs.manifest }}
       tag: ${{ !github.event.pull_request && github.ref_name || '' }}
@@ -129,7 +129,7 @@ jobs:
       "id-token": "write"
     defaults:
       run:
-        working-directory: ./cli
+        working-directory: cli
     steps:
       - name: enable windows longpaths
         run: |
@@ -208,7 +208,7 @@ jobs:
       BUILD_MANIFEST_NAME: target/distrib/global-dist-manifest.json
     defaults:
       run:
-        working-directory: ./cli
+        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
@@ -262,7 +262,7 @@ jobs:
       val: ${{ steps.host.outputs.manifest }}
     defaults:
       run:
-        working-directory: ./cli
+        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
@@ -378,7 +378,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     defaults:
       run:
-        working-directory: ./cli
+        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
