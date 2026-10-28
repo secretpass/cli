@@ -48,6 +48,9 @@ jobs:
   # Run 'dist plan' (or host) to determine what tasks we need to do
   plan:
     runs-on: "ubuntu-22.04"
+    defaults:
+      run:
+        working-directory: ./cli
     outputs:
       val: ${{ steps.plan.outputs.manifest }}
       tag: ${{ !github.event.pull_request && github.ref_name || '' }}
@@ -56,10 +59,11 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
+          path: "cli"
       - name: Install dist
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
@@ -73,7 +77,7 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v7"
         with:
-          "path": "../core"
+          "path": "core"
           "ref": "${{ github.ref_name }}"
           "repository": "secretpass/core"
           "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
@@ -123,14 +127,18 @@ jobs:
       "attestations": "write"
       "contents": "read"
       "id-token": "write"
+    defaults:
+      run:
+        working-directory: ./cli
     steps:
       - name: enable windows longpaths
         run: |
           git config --global core.longpaths true
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
+          path: "cli"
       - name: Install Rust non-interactively if not already installed
         if: ${{ matrix.container }}
         run: |
@@ -141,10 +149,12 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v7"
         with:
-          "path": "../core"
+          "path": "core"
           "ref": "${{ github.ref_name }}"
           "repository": "secretpass/core"
           "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
+          set-safe-directory: '..'
+
       - name: Install dist
         run: ${{ matrix.install_dist.run }}
       # Get the dist-manifest
@@ -196,11 +206,15 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/global-dist-manifest.json
+    defaults:
+      run:
+        working-directory: ./cli
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
+          path: "cli"
       - name: Install cached dist
         uses: actions/download-artifact@v8
         with:
@@ -246,11 +260,15 @@ jobs:
     runs-on: "ubuntu-22.04"
     outputs:
       val: ${{ steps.host.outputs.manifest }}
+    defaults:
+      run:
+        working-directory: ./cli
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
+          path: "cli"
       - name: Install cached dist
         uses: actions/download-artifact@v8
         with:
@@ -312,7 +330,7 @@ jobs:
       GITHUB_EMAIL: "admin+bot@axo.dev"
     if: ${{ !fromJson(needs.plan.outputs.val).announcement_is_prerelease || fromJson(needs.plan.outputs.val).publish_prereleases }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: true
           repository: "secretpass/homebrew-tap"
@@ -358,8 +376,12 @@ jobs:
     runs-on: "ubuntu-22.04"
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    defaults:
+      run:
+        working-directory: ./cli
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
+          path: "cli"
