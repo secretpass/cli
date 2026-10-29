@@ -1,12 +1,11 @@
 [package]
 name = "secretpass-cli"
-version = "0.1.2"
+version = "0.1.5"
 edition = "2024"
 repository = "https://github.com/secretpass/cli"
 authors = ["Secretpass Inc", "Billcountry Mwaniki"]
 description = "Secretpass cli allows you to manage secrets locally secured through passkeys for human access and generated private keys for machine access"
 homepage = "https://secretpass.cloud"
-
 
 [[bin]]
 name = "spass"
@@ -14,8 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.6.7", features = ["derive"] }
-secretpass-local = {path = "../core/local" }
-
+secretpass-local = { path = "../core/local" }
 [profile.release]
 opt-level = "z"
 lto = "thin"
