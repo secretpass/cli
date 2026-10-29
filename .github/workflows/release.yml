@@ -77,10 +77,10 @@ jobs:
       - name: Checkout Core
         uses: actions/checkout@v7
         with:
-          "path": core
-          "ref": "${{ github.ref_name }}"
-          "repository": "secretpass/core"
-          "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
+          path: core
+          ref: "${{ github.ref_name }}"
+          repository: secretpass/core
+          token: "${{ secrets.CORE_ACCESS_TOKEN }}"
       # sure would be cool if github gave us proper conditionals...
       # so here's a doubly-nested ternary-via-truthiness to try to provide the best possible
       # functionality based on whether this is a pull_request, and whether it's from a fork.
@@ -136,6 +136,13 @@ jobs:
           persist-credentials: false
           submodules: recursive
           path: "cli"
+      - name: Checkout Core
+        uses: actions/checkout@v7
+        with:
+          path: core
+          ref: "${{ github.ref_name }}"
+          repository: secretpass/core
+          token: "${{ secrets.CORE_ACCESS_TOKEN }}"
       - name: Install Rust non-interactively if not already installed
         if: ${{ matrix.container }}
         run: |
@@ -143,14 +150,6 @@ jobs:
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           fi
-      - name: Checkout Core
-        uses: actions/checkout@v7
-        with:
-          "path": core
-          "ref": "${{ github.ref_name }}"
-          "repository": secretpass/core
-          "token": "${{ secrets.CORE_ACCESS_TOKEN }}"
-          set-safe-directory: '..'
 
       - name: Install dist
         run: ${{ matrix.install_dist.run }}
@@ -212,6 +211,13 @@ jobs:
           persist-credentials: false
           submodules: recursive
           path: "cli"
+      - name: Checkout Core
+        uses: actions/checkout@v7
+        with:
+          path: core
+          ref: "${{ github.ref_name }}"
+          repository: secretpass/core
+          token: "${{ secrets.CORE_ACCESS_TOKEN }}"
       - name: Install cached dist
         uses: actions/download-artifact@v8
         with:
@@ -266,6 +272,13 @@ jobs:
           persist-credentials: false
           submodules: recursive
           path: "cli"
+      - name: Checkout Core
+        uses: actions/checkout@v7
+        with:
+          path: core
+          ref: "${{ github.ref_name }}"
+          repository: secretpass/core
+          token: "${{ secrets.CORE_ACCESS_TOKEN }}"
       - name: Install cached dist
         uses: actions/download-artifact@v8
         with:
