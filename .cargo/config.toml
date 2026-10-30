@@ -9,5 +9,5 @@ CLOUD_PROXY_URL = "https://api.secretpass.cloud"
 
 CLOUD_RP_ID = "--blank--"
 CLOUD_RP_ORIGIN = "--blank--"
-LOCAL_RP_ID = "secretpass-local.localhost"
-LOCAL_RP_ORIGIN = "https://local.secretpass.local"
+LOCAL_RP_ID = "local.secretpass.cloud"
+LOCAL_RP_ORIGIN = "https://local.secretpass.cloud"
