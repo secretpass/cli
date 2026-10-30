@@ -2333,6 +2333,7 @@ checksum = "48e13bd8c0e9365c43cfa5c9e8f9ad49d3c8444926c9aac819e0e4dc503c8fdf"
 dependencies = [
  "aws-lc-rs",
  "once_cell",
+ "ring",
  "rustls-pki-types",
  "rustls-webpki",
  "subtle",
@@ -2452,7 +2453,7 @@ dependencies = [
 
 [[package]]
 name = "secretpass-api"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2476,7 +2477,7 @@ dependencies = [
 
 [[package]]
 name = "secretpass-cli"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "clap",
  "secretpass-local",
@@ -2484,7 +2485,7 @@ dependencies = [
 
 [[package]]
 name = "secretpass-core"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "aes-gcm",
  "anyhow",
@@ -2512,7 +2513,7 @@ dependencies = [
 
 [[package]]
 name = "secretpass-local"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2850,6 +2851,7 @@ dependencies = [
  "log",
  "memchr",
  "percent-encoding",
+ "rustls",
  "serde",
  "serde_json",
  "sha2 0.10.9",
@@ -2858,6 +2860,7 @@ dependencies = [
  "tracing",
  "url",
  "uuid",
+ "webpki-roots",
 ]
 
 [[package]]
@@ -3710,6 +3713,15 @@ name = "webpki-root-certs"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e49d0e65abc00c142e8f9428da991da9f1a250c39be97459901eb12b9b49f62a"
+dependencies = [
+ "rustls-pki-types",
+]
+
+[[package]]
+name = "webpki-roots"
+version = "1.0.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7dcd9d09a39985f5344844e66b0c530a33843579125f23e21e9f0f220850f22a"
 dependencies = [
  "rustls-pki-types",
 ]
