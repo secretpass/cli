@@ -48,9 +48,6 @@ jobs:
   # Run 'dist plan' (or host) to determine what tasks we need to do
   plan:
     runs-on: "ubuntu-22.04"
-    defaults:
-      run:
-        working-directory: cli
     outputs:
       val: ${{ steps.plan.outputs.manifest }}
       tag: ${{ !github.event.pull_request && github.ref_name || '' }}
@@ -63,7 +60,6 @@ jobs:
         with:
           persist-credentials: false
           submodules: recursive
-          path: "cli"
       - name: Install dist
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
@@ -81,6 +77,8 @@ jobs:
           ref: "${{ github.ref_name }}"
           repository: secretpass/core
           token: "${{ secrets.CORE_ACCESS_TOKEN }}"
+      - name: Correct Core Path
+        run: yq -i '.dependencies.secretpass-local.path = "core/local"' Cargo.toml
       # sure would be cool if github gave us proper conditionals...
       # so here's a doubly-nested ternary-via-truthiness to try to provide the best possible
       # functionality based on whether this is a pull_request, and whether it's from a fork.
@@ -127,15 +125,11 @@ jobs:
       "attestations": "write"
       "contents": "read"
       "id-token": "write"
-    defaults:
-      run:
-        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
-          path: "cli"
       - name: Checkout Core
         uses: actions/checkout@v7
         with:
@@ -143,6 +137,8 @@ jobs:
           ref: "${{ github.ref_name }}"
           repository: secretpass/core
           token: "${{ secrets.CORE_ACCESS_TOKEN }}"
+      - name: Correct Core Path
+        run: yq -i '.dependencies.secretpass-local.path = "core/local"' Cargo.toml
       - name: Install Rust non-interactively if not already installed
         if: ${{ matrix.container }}
         run: |
@@ -171,7 +167,7 @@ jobs:
       - name: Attest
         uses: actions/attest@v4
         with:
-          subject-path: "cli/target/distrib/*${{ join(matrix.targets, ', ') }}*"
+          subject-path: "target/distrib/*${{ join(matrix.targets, ', ') }}*"
       - id: cargo-dist
         name: Post-build
         # We force bash here just because github makes it really hard to get values up
@@ -202,15 +198,11 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/global-dist-manifest.json
-    defaults:
-      run:
-        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
-          path: "cli"
       - name: Checkout Core
         uses: actions/checkout@v7
         with:
@@ -218,6 +210,8 @@ jobs:
           ref: "${{ github.ref_name }}"
           repository: secretpass/core
           token: "${{ secrets.CORE_ACCESS_TOKEN }}"
+      - name: Correct Core Path
+        run: yq -i '.dependencies.secretpass-local.path = "core/local"' Cargo.toml
       - name: Install cached dist
         uses: actions/download-artifact@v8
         with:
@@ -263,15 +257,11 @@ jobs:
     runs-on: "ubuntu-22.04"
     outputs:
       val: ${{ steps.host.outputs.manifest }}
-    defaults:
-      run:
-        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
-          path: "cli"
       - name: Checkout Core
         uses: actions/checkout@v7
         with:
@@ -279,6 +269,8 @@ jobs:
           ref: "${{ github.ref_name }}"
           repository: secretpass/core
           token: "${{ secrets.CORE_ACCESS_TOKEN }}"
+      - name: Correct Core Path
+        run: yq -i '.dependencies.secretpass-local.path = "core/local"' Cargo.toml
       - name: Install cached dist
         uses: actions/download-artifact@v8
         with:
@@ -289,7 +281,7 @@ jobs:
       - name: Fetch artifacts
         uses: actions/download-artifact@v8
         with:
-          pattern: cli/artifacts-*
+          pattern: artifacts-*
           path: target/distrib/
           merge-multiple: true
       - id: host
@@ -309,7 +301,7 @@ jobs:
       - name: "Download GitHub Artifacts"
         uses: actions/download-artifact@v8
         with:
-          pattern: cli/artifacts-*
+          pattern: artifacts-*
           path: artifacts
           merge-multiple: true
       - name: Cleanup
@@ -326,7 +318,7 @@ jobs:
           # Write and read notes from a file to avoid quoting breaking things
           echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
 
-          gh release create "${{ needs.plan.outputs.tag }}" --target "$RELEASE_COMMIT" $PRERELEASE_FLAG --title "$ANNOUNCEMENT_TITLE" --notes-file "$RUNNER_TEMP/notes.txt" cli/artifacts/*
+          gh release create "${{ needs.plan.outputs.tag }}" --target "$RELEASE_COMMIT" $PRERELEASE_FLAG --title "$ANNOUNCEMENT_TITLE" --notes-file "$RUNNER_TEMP/notes.txt" artifacts/*
 
   publish-homebrew-formula:
     needs:
@@ -349,7 +341,7 @@ jobs:
       - name: Fetch homebrew formulae
         uses: actions/download-artifact@v8
         with:
-          pattern: cli/artifacts-*
+          pattern: artifacts-*
           path: Formula/
           merge-multiple: true
       # This is extra complex because you can make your Formula name not match your app name
@@ -386,12 +378,8 @@ jobs:
     runs-on: "ubuntu-22.04"
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    defaults:
-      run:
-        working-directory: cli
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: recursive
-          path: "cli"
